@@ -10,7 +10,7 @@ OpenPoseROSIO::OpenPoseROSIO(OpenPose &openPose): nh_("/openpose_ros_node"), it_
 
     nh_.param("image_topic", image_topic, std::string("/camera/image_raw"));
     nh_.param("output_topic", output_topic, std::string("/openpose_ros/human_list"));
-    nh_.param("display_output", display_output_flag_, true);
+    nh_.param("display_output", display_output_flag_, false);
     nh_.param("print_keypoints", print_keypoints_flag_, false);
     nh_.param("save_original_video", save_original_video_flag_, false);
     nh_.param("save_openpose_video", save_openpose_video_flag_, false);
@@ -70,11 +70,11 @@ void OpenPoseROSIO::processImage(const sensor_msgs::ImageConstPtr& msg)
         }
         if(save_original_video_flag_)
         {
-            saveOriginalVideo(datumToProcess);
+            //saveOriginalVideo(datumToProcess);
         }
         if(save_openpose_video_flag_)
         {
-            saveOpenPoseVideo(datumProcessed);
+            //saveOpenPoseVideo(datumProcessed);
         }
         publish(datumProcessed);
     }
@@ -236,6 +236,7 @@ void OpenPoseROSIO::printKeypoints(const std::shared_ptr<std::vector<op::Datum>>
         op::log("Nullptr or empty datumsPtr found.", op::Priority::High, __LINE__, __FUNCTION__, __FILE__);
 }
 
+
 void OpenPoseROSIO::publish(const std::shared_ptr<std::vector<op::Datum>>& datumsPtr)
 {
     if (datumsPtr != nullptr && !datumsPtr->empty() && !FLAGS_body_disable)
@@ -244,23 +245,24 @@ void OpenPoseROSIO::publish(const std::shared_ptr<std::vector<op::Datum>>& datum
         const auto& faceKeypoints = datumsPtr->at(0).faceKeypoints;
         const auto& leftHandKeypoints = datumsPtr->at(0).handKeypoints[0];
         const auto& rightHandKeypoints = datumsPtr->at(0).handKeypoints[1];
-        std::vector<op::Rectangle<float>>& face_rectangles = datumsPtr->at(0).faceRectangles;
+        //std::vector<op::Rectangle<float>>& face_rectangles = datumsPtr->at(0).faceRectangles;
 
         openpose_ros_msgs::OpenPoseHumanList human_list_msg;
         human_list_msg.header.stamp = ros::Time::now();
         human_list_msg.image_header = image_header_;
         human_list_msg.num_humans = poseKeypoints.getSize(0);
-        
+     
         std::vector<openpose_ros_msgs::OpenPoseHuman> human_list(poseKeypoints.getSize(0));
 
         for (auto person = 0 ; person < poseKeypoints.getSize(0) ; person++)
         {
-            openpose_ros_msgs::OpenPoseHuman human;
+
+	    openpose_ros_msgs::OpenPoseHuman human;
 
             int num_body_key_points_with_non_zero_prob = 0;
             for (auto bodyPart = 0 ; bodyPart < poseKeypoints.getSize(1) ; bodyPart++)
             {
-                openpose_ros_msgs::PointWithProb body_point_with_prob;
+	        openpose_ros_msgs::PointWithProb body_point_with_prob;
                 body_point_with_prob.x = poseKeypoints[{person, bodyPart, 0}];
                 body_point_with_prob.y = poseKeypoints[{person, bodyPart, 1}];
                 body_point_with_prob.prob = poseKeypoints[{person, bodyPart, 2}];
@@ -271,7 +273,7 @@ void OpenPoseROSIO::publish(const std::shared_ptr<std::vector<op::Datum>>& datum
                 human.body_key_points_with_prob.at(bodyPart) = body_point_with_prob;
             }
             human.num_body_key_points_with_non_zero_prob = num_body_key_points_with_non_zero_prob;
-
+/*
             if(FLAGS_face)
             {
                 int num_face_key_points_with_non_zero_prob = 0;
@@ -328,8 +330,9 @@ void OpenPoseROSIO::publish(const std::shared_ptr<std::vector<op::Datum>>& datum
                 human.num_right_hand_key_points_with_non_zero_prob = num_right_hand_key_points_with_non_zero_prob;
                 human.num_left_hand_key_points_with_non_zero_prob = num_left_hand_key_points_with_non_zero_prob;
             }
-
+	    */
             human_list.at(person) = human;
+
         }
 
         human_list_msg.human_list = human_list;

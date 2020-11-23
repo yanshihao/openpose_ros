@@ -16,7 +16,7 @@ DEFINE_int32(profile_speed,             1000,           "If PROFILER_ENABLED was
 // OpenPose
 DEFINE_double(camera_fps,               30.0,           "Frame rate for the webcam (also used when saving video). Set this value to the minimum"
                                                         " value between the OpenPose displayed speed and the webcam real frame rate.");
-DEFINE_string(model_folder,             "/path/to/openpose/models/",      "Folder path (absolute or relative) where the models (pose, face, ...) are located.");
+DEFINE_string(model_folder,             "/home/nvidia/gitplace/openpose/models/",      "Folder path (absolute or relative) where the models (pose, face, ...) are located.");
 DEFINE_string(output_resolution,        "-1x-1",        "The image resolution (display and output). Use \"-1x-1\" to force the program to use the"
                                                         " input image resolution.");
 DEFINE_int32(num_gpu,                   -1,             "The number of GPU devices to use. If negative, it will use all the available GPUs in your"
@@ -37,9 +37,9 @@ DEFINE_int32(number_people_max,         -1,             "This parameter will lim
 // OpenPose Body Pose
 DEFINE_bool(body_disable,               false,          "Disable body keypoint detection. Option only possible for faster (but less accurate) face"
                                                         " keypoint detection.");
-DEFINE_string(model_pose,               "COCO",         "Model to be used. E.g. `COCO` (18 keypoints), `MPI` (15 keypoints, ~10% faster), "
+DEFINE_string(model_pose,               "BODY_25",         "Model to be used. E.g. `COCO` (18 keypoints), `MPI` (15 keypoints, ~10% faster), "
                                                         "`MPI_4_layers` (15 keypoints, even faster but less accurate).");
-DEFINE_string(net_resolution,           "-1x368",       "Multiples of 16. If it is increased, the accuracy potentially increases. If it is"
+DEFINE_string(net_resolution,           "128x96",       "Multiples of 16. If it is increased, the accuracy potentially increases. If it is"
                                                         " decreased, the speed increases. For maximum speed-accuracy balance, it should keep the"
                                                         " closest aspect ratio possible to the images or videos to be processed. Using `-1` in"
                                                         " any of the dimensions, OP will choose the optimal aspect ratio depending on the user's"

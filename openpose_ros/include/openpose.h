@@ -23,7 +23,7 @@ namespace openpose_ros {
             const bool multipleView;
             const bool enableGoogleLogging;
 
-            op::Wrapper<std::vector<op::Datum>> opWrapper;
+            op::Wrapper opWrapper;
 
             const op::WrapperStructPose wrapperStructPose;
             const op::WrapperStructFace wrapperStructFace;

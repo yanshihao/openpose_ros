@@ -12,15 +12,17 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   cv_bridge
   image_transport
+  message_filters
 )
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 
 # find_package(CUDA REQUIRED) # Uncomment this line if you have trouble compiling
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3 REQUIRED)
 find_package(GFlags)
 find_package(Glog)
 find_package(OpenPose REQUIRED)
+find_package(PCL REQUIRED)
 
 catkin_package(
    INCLUDE_DIRS include
@@ -36,12 +38,16 @@ include_directories(
   ${GFLAGS_INCLUDE_DIR} 
   ${GLOG_INCLUDE_DIR} 
   ${OpenCV_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}_node src/openpose_ros_node.cpp src/openpose.cpp src/openpose_ros_io.cpp 
                                     src/gflags_options.cpp)
 
+add_executable(${PROJECT_NAME}_depth_node src/depth_node.cpp)
+
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_depth_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
@@ -49,4 +55,14 @@ target_link_libraries(${PROJECT_NAME}_node
   ${OpenPose_LIBS} 
   ${GFLAGS_LIBRARY} 
   ${GLOG_LIBRARY} 
+  ${PCL_LIBRARIES}
+)
+
+target_link_libraries(${PROJECT_NAME}_depth_node
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+  ${OpenPose_LIBS} 
+  ${GFLAGS_LIBRARY} 
+  ${GLOG_LIBRARY} 
+  ${PCL_LIBRARIES}
 )

@@ -23,7 +23,7 @@ OpenPose::OpenPose() : outputSize(op::flagsToPoint(FLAGS_output_resolution, "-1x
                                          (float)FLAGS_alpha_heatmap, FLAGS_part_to_show, FLAGS_model_folder,
                                          heatMapTypes, heatMapScale, FLAGS_part_candidates,
                                          (float)FLAGS_render_threshold, FLAGS_number_people_max,
-                                         enableGoogleLogging, FLAGS_3d, FLAGS_3d_min_views),
+                                         enableGoogleLogging),
                        wrapperStructFace(FLAGS_face, faceNetInputSize,
                                          op::flagsToRenderMode(FLAGS_face_render, multipleView, FLAGS_render_pose),
                                          (float)FLAGS_face_alpha_pose, (float)FLAGS_face_alpha_heatmap,
@@ -38,10 +38,10 @@ OpenPose::OpenPose() : outputSize(op::flagsToPoint(FLAGS_output_resolution, "-1x
                        fullScreen(false),
                        wrapperStructOutput(displayMode, guiVerbose, fullScreen, FLAGS_write_keypoint,
                                            op::stringToDataFormat(FLAGS_write_keypoint_format),
-                                           writeJson, FLAGS_write_coco_json,
+                                           writeJson, FLAGS_write_coco_json,"",0,
                                            FLAGS_write_images, FLAGS_write_images_format, FLAGS_write_video,
                                            FLAGS_camera_fps, FLAGS_write_heatmaps, 
-                                           FLAGS_write_heatmaps_format)
+                                           FLAGS_write_heatmaps_format,"","","","8051")
 
 
 {
@@ -56,8 +56,11 @@ OpenPose::OpenPose() : outputSize(op::flagsToPoint(FLAGS_output_resolution, "-1x
 
     // Configure wrapper
     op::log("Configuring OpenPose wrapper.", op::Priority::Low, __LINE__, __FUNCTION__, __FILE__);
-    opWrapper.configure(wrapperStructPose, wrapperStructFace, wrapperStructHand, op::WrapperStructInput{},
-                        wrapperStructOutput);
+    opWrapper.configure(wrapperStructPose);
+    opWrapper.configure(wrapperStructFace);
+    opWrapper.configure(wrapperStructHand);
+    opWrapper.configure(op::WrapperStructInput{});
+    opWrapper.configure(wrapperStructOutput);
 
     // Set to single-thread running (to debug and/or reduce latency)
     if (FLAGS_disable_multi_thread)

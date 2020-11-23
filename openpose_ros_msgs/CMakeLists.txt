@@ -19,6 +19,9 @@ add_message_files(
   OpenPoseHuman.msg
   OpenPoseHumanList.msg
   PointWithProb.msg
+  PointWithDepth.msg
+  HumanDepth.msg
+  HumanDepthList.msg
 )
 
 generate_messages(
